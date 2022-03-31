@@ -7,33 +7,33 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-<h1>leadPops assignment</h1>
+<h1>leadPops assignment (custom JWT solution)</h1>
 
-<h4><strong>Requirements</strong></h4>
+<p><strong>Requirements</strong></p>
 <p>Local server runing (Apache Web Server and MySql Database)</p>
 
 <br>
 
-<h4><strong>Setup enviroment/db</strong></h4>
+<p><strong>Setup enviroment/db</strong></p>
 <ol>
-    <li>1. Clone git repository (https://github.com/MladenStanisic/jwt_assignment.git)</li>
-    <li>2. Open <strong>jwt_assigment</strong> folder in terminal</li>
-    <li>3. Run: php artisan db:create (custom made db creational tool with artisan)</li>
-    <li>4. php artisan migrate</li>
-    <li>5. If you already don't have, install desktop version of <a href="https://www.postman.com/downloads/">Postman app</a> to test API calls on your local machine</li>
+    <li>Clone git repository (https://github.com/MladenStanisic/jwt_assignment.git) which contain laravel project</li>
+    <li>Open <strong>jwt_assigment</strong> folder in terminal</li>
+    <li>Run: php artisan db:create (custom made db creational tool with artisan, by default it will create jwt_assignment db)</li>
+    <li>Run: php artisan migrate</li>
+    <li>If you already don't have, install desktop version of <a href="https://www.postman.com/downloads/">Postman app</a> to test API calls on your local machine</li>
 </ol>
 
 <br>
 
-<h4><strong>Endpoints</strong></h4>
+<p><strong>Endpoints</strong></p>
 <ol>
-    <li><strong>Create JTW token</strong>: Send POST request to http://localhost:8000/api/create-token, with valid email key/value param to create JTW token</li>
-    <li><strong>Create short url</strong>: (Only if JTW token is validated), Send POST request to http://localhost:8000/api/shorturl, with key name_url_long and valid URL value param to create short url (name_url_short)</li>
-    <li><strong>Open long URL</strong>: (Only if JTW token is validated), Send GET request to http://localhost:8000/api/shorturl/{name_url_short}</li>
+    <li><strong>Create JWT</strong>: Send POST request to http://localhost:8000/api/create-token, with valid email key/value param to create JWT token</li>
+    <li><strong>Create short url</strong>: (Only if JWT token is validated), Send POST request to http://localhost:8000/api/shorturl, with key name_url_long and valid URL value param to create short url (name_url_short)</li>
+    <li><strong>Open long URL</strong>: (Only if JWT token is validated), Send GET request to http://localhost:8000/api/shorturl/{name_url_short}</li>
 </ol>
 
 <br>
 
-<h4><strong>Postman collection used for testing</strong></h4>
-<p>File: <a href="postman_tests.json" download>Download</a></p>
+<p><strong>Postman collection used for testing</strong></p>
+<p><a href="postman_tests.json">File</a></p>
 

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ShortUrlController;
-use App\Http\Controllers\TokenJTWController;
+use App\Http\Controllers\JWTController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,13 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// 1. Endpoint: Create jtw token
-Route::post('/create-token', [TokenJTWController::class, 'store']);
+// 1. Endpoint: Create jwt token
+Route::post('/create-token', [JWTController::class, 'store']);
 
 // 2. Endpoint: Store short url
-Route::post('/shorturl', [ShortUrlController::class, 'store'])->middleware('auth_jtw');
+Route::post('/shorturl', [ShortUrlController::class, 'store'])->middleware('auth_jwt');
 
 // 3. Endpoint: Open long url from short one
-Route::get('/shorturl/{name_url_short}', [ShortUrlController::class, 'openurl'])->middleware('auth_jtw');
+Route::get('/shorturl/{name_url_short}', [ShortUrlController::class, 'openurl'])->middleware('auth_jwt');
 
 

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TokenJTW extends Model
+class JWT extends Model
 {
 	use HasFactory;
 
@@ -27,7 +27,7 @@ class TokenJTW extends Model
 	/**
 	 * Expire time of cookie/token in minutes
 	 */
-	public int $expire_time_minutes = 10;
+	public int $expire_time_minutes = 1;
 
 	/**
 	 * Payload info (for now just email/expire time)
@@ -41,12 +41,12 @@ class TokenJTW extends Model
 	 *
 	 * @param string $email
 	 *
-	 * @return string $jtw = token
+	 * @return string $jwt = token
 	 */
 	public function generate_jwt(string $email): string
 	{
 		// 1.Header part
-		$headers_encoded = $this->base64url_encode(json_encode($this->get_jtw_header()));
+		$headers_encoded = $this->base64url_encode(json_encode($this->get_jwt_header()));
 
 		// 2.Payload part
 		$this->payload['email'] = $email;
@@ -56,7 +56,7 @@ class TokenJTW extends Model
         $signature = hash_hmac('SHA256', "$headers_encoded.$payload_encoded", $this->secret_key, true);
         $signature_encoded = $this->base64url_encode($signature);
 
-		// All combined in jtw
+		// All combined in jwt
         $jwt = "$headers_encoded.$payload_encoded.$signature_encoded";
 
 		return $jwt;
@@ -66,7 +66,7 @@ class TokenJTW extends Model
 	/**
 	 * Return array (1. part of token, header)
 	 */
-	public function get_jtw_header(): array
+	public function get_jwt_header(): array
 	{
 		return [
 			'alg' => $this->header_algorithm,
@@ -103,17 +103,17 @@ class TokenJTW extends Model
 	/**
 	 * Check if token is valid
 	 *
-	 * @param string $jtw_token
+	 * @param string $jwt
 	 *
 	 * @return bool
 	 */
-	public function is_jwt_valid($jtw_token): bool
+	public function is_jwt_valid($jwt): bool
 	{
 		// split the jwt
-		$data_token = $this->split_jtw_token($jtw_token);
+		$data_token = $this->split_jwt($jwt);
 
 		// check the expiration time
-		$is_token_expired = $this->is_token_expired(json_decode($data_token['payload'])->exp);
+		$is_jwt_expired = $this->is_jwt_expired(json_decode($data_token['payload'])->exp);
 
 		// build a signature based on the header and payload using the secret
 		$base64_url_header = $this->base64url_encode($data_token['header']);
@@ -126,26 +126,26 @@ class TokenJTW extends Model
 
 		if (!$is_signature_valid)
 			return false;
-		elseif ($is_token_expired)
+		elseif ($is_jwt_expired)
 			return false;
 		else
 			return true;
 	}
 
 	/**
-	 * This method splits jtw token into 3 parts
+	 * This method splits jwt token into 3 parts
 	 * 1. header
 	 * 2. payload
 	 * 3. signature
 	 *
-	 * @param string $jtw_token
+	 * @param string $jwt
 	 *
 	 * @return array
 	 */
-	private function split_jtw_token(string $jtw_token): array
+	private function split_jwt(string $jwt): array
 	{
 		// split the jwt
-		$tokenParts = explode('.', $jtw_token);
+		$tokenParts = explode('.', $jwt);
 		$aData['header'] = base64_decode($tokenParts[0]);
 		$aData['payload'] = base64_decode($tokenParts[1]);
 		$aData['signature'] = $tokenParts[2];
@@ -160,37 +160,37 @@ class TokenJTW extends Model
 	 *
 	 * @return bool
 	 */
-	private function is_token_expired($expiration_time): bool
+	private function is_jwt_expired($expiration_time): bool
 	{
 		return ($expiration_time - time()) < 0;
 	}
 
 	/**
-	 * Static method that generate JTW token and set cookie
+	 * Static method that generate JWT token and set cookie
 	 *
 	 * @return void
 	 */
-	public static function set_jtw_token(string $email): void
+	public static function set_jwt(string $email): void
 	{
 
-		$oJTWToken = new TokenJTW;
-		$tokenValue = $oJTWToken->generate_jwt($email);
+		$oJWTToken = new JWT;
+		$tokenValue = $oJWTToken->generate_jwt($email);
 
-		setcookie('JTWTokken', $tokenValue, 0, "", "", false, true);
+		setcookie('JWT', $tokenValue, 0, "", "", false, true);
 	}
 
 
 	/**
-	 * Static method that verifies JTW token
+	 * Static method that verifies JWT token
 	 *
 	 * @return bool
 	 */
-	public static function validate_jtw_token():bool
+	public static function validate_jwt():bool
 	{
 
-		if (isset($_COOKIE['JTWTokken'])) {
-			$oJTWToken = new TokenJTW;
-			return $oJTWToken->is_jwt_valid($_COOKIE['JTWTokken']);
+		if (isset($_COOKIE['JWT'])) {
+			$oJWTToken = new JWT;
+			return $oJWTToken->is_jwt_valid($_COOKIE['JWT']);
 		} else {
 			return false;
 		}

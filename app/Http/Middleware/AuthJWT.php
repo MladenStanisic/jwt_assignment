@@ -4,9 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use App\Models\TokenJTW;
+use App\Models\JWT;
 
-class AuthJTWTokken
+class AuthJWT
 {
     /**
      * Handle an incoming request.
@@ -17,9 +17,9 @@ class AuthJTWTokken
      */
     public function handle(Request $request, Closure $next)
     {
-        if(TokenJTW::validate_jtw_token())
+        if(JWT::validate_jwt())
             return $next($request);
         else
-            return response()->json(['Error' => 'Token is not valid'], 401);
+            return response()->json(['Error' => 'Token is expired or not valid'], 401);
     }
 }

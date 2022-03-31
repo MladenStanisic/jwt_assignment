@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "b782f9f3-4d42-416d-8223-5c21dad0f248",
-		"name": "API testing JTW",
+		"name": "API testing JWT",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
