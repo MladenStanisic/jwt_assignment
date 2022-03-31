@@ -29,7 +29,7 @@
 <ol>
     <li><strong>Create JWT</strong>: Send POST request to http://localhost:8000/api/create-token, with valid email key/value param to create JWT token (only if previous one expired, or no token is created)<br>
      (it would be right to create token after user authentication/login, but i skipped that step to save time)</li>
-    <li><strong>Create short url</strong>: (Only if JWT token is validated), Send POST request to http://localhost:8000/api/shorturl, with key name_url_long and valid URL value param to create short url (name_url_short)</li>
+    <li><strong>Create short URL</strong>: (Only if JWT token is validated), Send POST request to http://localhost:8000/api/shorturl, with key name_url_long and valid URL value param to create short url (name_url_short)</li>
     <li><strong>Open long URL</strong>: (Only if JWT token is validated), Send GET request to http://localhost:8000/api/shorturl/{name_url_short}</li>
 </ol>
 
