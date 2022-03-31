@@ -20,7 +20,7 @@
     <li>2. Open <strong>jwt_assigment</strong> folder in terminal</li>
     <li>3. Run: php artisan db:create (custom made db creational tool with artisan)</li>
     <li>4. php artisan migrate</li>
-    <li>5. If you already don't have, install desktop version of <a href="https://www.postman.com/downloads/">Postman app</p> to test API calls on your local machine</li>
+    <li>5. If you already don't have, install desktop version of <a href="https://www.postman.com/downloads/">Postman app</a> to test API calls on your local machine</li>
 </ol>
 
 <br>
@@ -32,6 +32,8 @@
     <li><strong>Open long URL</strong>: (Only if JTW token is validated), Send GET request to http://localhost:8000/api/shorturl/{name_url_short}</li>
 </ol>
 
+<br>
+
 <h4><strong>Postman collection used for testing</strong></h4>
-<p>File: <a href="postman_tests.json">Download</a></p>
+<p>File: <a href="postman_tests.json" download>Download</a></p>
 
