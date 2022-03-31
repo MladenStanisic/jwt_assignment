@@ -28,7 +28,7 @@
 <p><strong>Endpoints</strong></p>
 <ol>
     <li><strong>Create JWT</strong>: Send POST request to http://localhost:8000/api/create-token, with valid email key/value param to create JWT token (only if previous one expired, or no token is created)<br>
-     <strong style="color:red">*** Note: it would be right to create token after user authentication/login (to pass user password also, not just email, and grab user from repository) but i skipped that step to save time</strong></li>
+     <strong style="color:red">*** Note: it would be right to create token after user authentication/login (to pass user password also, and create token only if user is authenticated) but i skipped that step to save time</strong></li>
     <li><strong>Create short URL</strong>: (Only if JWT token is validated), Send POST request to http://localhost:8000/api/shorturl, with key name_url_long and valid URL value param to create short url (name_url_short)</li>
     <li><strong>Open long URL</strong>: (Only if JWT token is validated), Send GET request to http://localhost:8000/api/shorturl/{name_url_short}</li>
 </ol>
