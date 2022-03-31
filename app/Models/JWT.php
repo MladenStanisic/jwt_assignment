@@ -27,7 +27,7 @@ class JWT extends Model
 	/**
 	 * Expire time of cookie/token in minutes
 	 */
-	public int $expire_time_minutes = 1;
+	public int $expire_time_minutes = 10;
 
 	/**
 	 * Payload info (for now just email/expire time)
