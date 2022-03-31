@@ -53,6 +53,7 @@ class JWT extends Model
 		$this->payload = $this->add_expire_time_to_payload($this->payload);
 		$payload_encoded = $this->base64url_encode(json_encode($this->payload));
 
+        // 3. Signature part
         $signature = hash_hmac('SHA256', "$headers_encoded.$payload_encoded", $this->secret_key, true);
         $signature_encoded = $this->base64url_encode($signature);
 
