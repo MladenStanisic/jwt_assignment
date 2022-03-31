@@ -54,7 +54,7 @@ class JWT extends Model
 		$payload_encoded = $this->base64url_encode(json_encode($this->payload));
 
         // 3. Signature part
-        $signature = hash_hmac('SHA256', "$headers_encoded.$payload_encoded", $this->secret_key, true);
+        $signature = $this->generate_jwt_signature($headers_encoded, $payload_encoded);
         $signature_encoded = $this->base64url_encode($signature);
 
 		// All combined in jwt
@@ -101,6 +101,16 @@ class JWT extends Model
 		return rtrim(strtr(base64_encode($str), '+/', '-_'), '=');
 	}
 
+    /**
+     * Generate jtw signature
+     *
+     * @return string
+     */
+    private function generate_jwt_signature(string $header, string $payload) :string
+    {
+        return hash_hmac('SHA256', $header . "." . $payload, $this->secret_key, true);
+    }
+
 	/**
 	 * Check if token is valid
 	 *
@@ -114,12 +124,13 @@ class JWT extends Model
 		$data_token = $this->split_jwt($jwt);
 
 		// check the expiration time
-		$is_jwt_expired = $this->is_jwt_expired(json_decode($data_token['payload'])->exp);
+		if($this->is_jwt_expired(json_decode($data_token['payload'])->exp))
+            return false;
 
 		// build a signature based on the header and payload using the secret
 		$base64_url_header = $this->base64url_encode($data_token['header']);
 		$base64_url_payload = $this->base64url_encode($data_token['payload']);
-		$signature = hash_hmac('SHA256', $base64_url_header . "." . $base64_url_payload, $this->secret_key, true);
+		$signature = $this->generate_jwt_signature($base64_url_header, $base64_url_payload);
 		$base64_url_signature = $this->base64url_encode($signature);
 
 		// verify it matches the signature provided in the jwt
@@ -127,10 +138,8 @@ class JWT extends Model
 
 		if (!$is_signature_valid)
 			return false;
-		elseif ($is_jwt_expired)
-			return false;
-		else
-			return true;
+
+		return true;
 	}
 
 	/**

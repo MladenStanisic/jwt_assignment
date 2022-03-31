@@ -33,22 +33,19 @@ class ShortUrlController extends Controller
 	 */
 	public function store(Request $request)
 	{
-        if (filter_var($request->name_url_long, FILTER_VALIDATE_URL)) {
+        // Validation of url
+		$request->validate([
+			'name_url_long' => 'required|url'
+		]);
 
-            $aData['name_url_long'] = $request->name_url_long;
-            $aData['name_url_short'] = substr(md5(rand()), 0, $this->short_url_lenght);
+		$aData['name_url_long'] = $request->name_url_long;
+		$aData['name_url_short'] = substr(md5(rand()), 0, $this->short_url_lenght);
 
-            try {
-                ShortUrl::create($aData);
-                return response()->json(['Ok' => 'Short url created: ' . $aData['name_url_short']]);
-
-            } catch (\Exception $exception) {
-                return response()->json(['Error' => $exception->getMessage()]);
-            }
-
-        } else {
-            return response()->json(['Error' => 'Not valid URL parsed']);
-        }
+		try {
+			return ShortUrl::create($aData);
+		} catch (\Exception $exception) {
+			return response()->json(['Error' => $exception->getMessage()]);
+		}
 	}
 
 	/**
@@ -85,31 +82,31 @@ class ShortUrlController extends Controller
 		//
 	}
 
-    /**
-     * Search for the long url
-     *
-     * @param str $name_url_short
-     *
+	/**
+	 * Search for the long url
+	 *
+	 * @param str $name_url_short
+	 *
 	 * @return \Illuminate\Http\Response
-     *
-     */
-    public function search($name_url_short) {
-        return ShortUrl::where('name_url_short', $name_url_short)->get();
-    }
+	 *
+	 */
+	public function search($name_url_short)
+	{
+		return ShortUrl::where('name_url_short', $name_url_short)->get();
+	}
 
-    /**
-     * Search for the long url
-     *
-     * @param str $name_url_short
-     *
+	/**
+	 * Search for the long url
+	 *
+	 * @param str $name_url_short
+	 *
 	 * @return Illuminate\Support\Facades\Redirect
-     *
-     */
-    public function openurl($name_url_short) {
+	 *
+	 */
+	public function openurl($name_url_short)
+	{
 
-        $urls = $this->search($name_url_short);
-        return redirect()->away($urls[0]->name_url_long);
-
-
-    }
+		$urls = $this->search($name_url_short);
+		return redirect()->away($urls[0]->name_url_long);
+	}
 }
