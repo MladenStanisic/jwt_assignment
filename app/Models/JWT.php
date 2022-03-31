@@ -27,7 +27,7 @@ class JWT extends Model
 	/**
 	 * Expire time of cookie/token in minutes
 	 */
-	public int $expire_time_minutes = 10;
+	public int $expire_time_minutes = 1;
 
 	/**
 	 * Payload info (for now just email/expire time)
@@ -172,12 +172,25 @@ class JWT extends Model
 	 */
 	public static function set_jwt(string $email): void
 	{
+            $oJWTToken = new JWT;
+            $tokenValue = $oJWTToken->generate_jwt($email);
 
-		$oJWTToken = new JWT;
-		$tokenValue = $oJWTToken->generate_jwt($email);
+            setcookie('JWT', $tokenValue, 0, "", "", false, true);
 
-		setcookie('JWT', $tokenValue, 0, "", "", false, true);
 	}
+
+    /**
+     * Return JWT COOKIE if it is set
+     *
+     * @return bool|string
+     */
+    public static function get_jwt()
+    {
+        if (isset($_COOKIE['JWT']))
+            return $_COOKIE['JWT'];
+        else
+            return false;
+    }
 
 
 	/**
@@ -188,9 +201,9 @@ class JWT extends Model
 	public static function validate_jwt():bool
 	{
 
-		if (isset($_COOKIE['JWT'])) {
+		if (self::get_jwt()) {
 			$oJWTToken = new JWT;
-			return $oJWTToken->is_jwt_valid($_COOKIE['JWT']);
+			return $oJWTToken->is_jwt_valid(self::get_jwt());
 		} else {
 			return false;
 		}

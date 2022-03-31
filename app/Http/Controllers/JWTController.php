@@ -18,8 +18,14 @@ class JWTController extends Controller
 	{
 		// Check if email is set, and generate the token
 		if (isset($request->email) && filter_var($request->email, FILTER_VALIDATE_EMAIL)) {
-			JWT::set_jwt($request->email);
-			return response()->json(['OK' => 'JWT generated: '.$_COOKIE['JWT']]);
+
+            // Check if token is set
+            if(!JWT::validate_jwt()) {
+                JWT::set_jwt($request->email);
+			    return response()->json(['OK' => 'JWT generated: '.JWT::get_jwt()]);
+            } else {
+                return response()->json(['OK' => 'You already have valid JWT: '.JWT::get_jwt()]);
+            }
 
 		// Return error if not
 		} else {
