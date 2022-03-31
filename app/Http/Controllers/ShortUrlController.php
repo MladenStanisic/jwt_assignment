@@ -33,16 +33,22 @@ class ShortUrlController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$aData['name_url_long'] = $request->name_url_long;
-		$aData['name_url_short'] = substr(md5(rand()), 0, $this->short_url_lenght);
+        if (filter_var($request->name_url_long, FILTER_VALIDATE_URL)) {
 
-		try {
-			ShortUrl::create($aData);
-			return response()->json(['Ok' => 'Short url created: ' . $aData['name_url_short']]);
+            $aData['name_url_long'] = $request->name_url_long;
+            $aData['name_url_short'] = substr(md5(rand()), 0, $this->short_url_lenght);
 
-		} catch (\Exception $exception) {
-			return response()->json(['Error' => $exception->getMessage()]);
-		}
+            try {
+                ShortUrl::create($aData);
+                return response()->json(['Ok' => 'Short url created: ' . $aData['name_url_short']]);
+
+            } catch (\Exception $exception) {
+                return response()->json(['Error' => $exception->getMessage()]);
+            }
+
+        } else {
+            return response()->json(['Error' => 'Not valid URL parsed']);
+        }
 	}
 
 	/**
